@@ -3,11 +3,7 @@ THis repository contains mission execution python scripts for cps_challange_2020
 run final_mission_file.py is the execution file.
 
 ## Instructions
-create a rospy package in your workspace
-
-
-## Instructions
-Go to packages folder of your workspace
+Go to src folder of your workspace
 `cd ~/catkin_ws/src`
 
 Create rospy package
@@ -17,6 +13,26 @@ Build new package
 `cd ..`
 `catkin_build`
 `source devel/setup.bash`
+
+Go to package folder
+`roscd mission_py`
+
+For python script files, create a folder named /scripts
+`mkdir scripts`
+`cd scripts`
+
+copy the mission script file final_mission_file.py to this folder.
+chmod this file
+'chmod +x final_mission_file.py
+
+Now you can execute this file through rosrun
+But before that, run the cps_challange_2020 simulation and have the drone ready to take off!!
+
+Run the file.
+`rosrun mission_py final_mission_file.py
+
+
+
 ### Position control
 ### Demo: Mission
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/lCBCBzEzrws/0.jpg)](https://youtu.be/lCBCBzEzrws)
