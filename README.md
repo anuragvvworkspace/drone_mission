@@ -19,5 +19,4 @@ Build new package
 `source devel/setup.bash`
 ### Position control
 ### Demo: Mission
-Demo 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/lCBCBzEzrws/0.jpg)](https://youtu.be/lCBCBzEzrws)
