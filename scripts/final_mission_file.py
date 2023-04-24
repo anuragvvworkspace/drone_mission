@@ -7,8 +7,7 @@ from mavros_msgs.srv import CommandBool, CommandBoolRequest, SetMode, SetModeReq
 import numpy
 import math
 from tf.transformations import quaternion_from_euler
-
-
+from mavros_msgs.msg import PositionTarget
 
 class midterm_drone():
 	def __init__(self):
@@ -197,16 +196,43 @@ class midterm_drone():
 			x, y, z = waypt.tolist()[0]
 			self.navigate(x, y, z)
 	
+	def gotoRover(self):
+		print("=== GO to rock and Face rock ========")
+		locations = numpy.matrix([[12.62, -64.8, 2],[12.62, -64.85, 0.5]])
+		for waypt in locations:
+			x, y, z = waypt.tolist()[0]
+			self.navigate(x, y, z)
+
+	def land_on_rover(self):
+		local_pos_pub = rospy.Publisher('/mavros/setpoint_raw/local', PositionTarget, queue_size=10)
+		arm_service = rospy.ServiceProxy('/mavros/cmd/arming', CommandBool)
+		landing_position = PositionTarget()
+		landing_position.position.x = 12.621
+		landing_position.position.y = -64.85
+		landing_position.position.z = -3.5
+		landing_position.coordinate_frame = PositionTarget.FRAME_LOCAL_NED
+		landing_position.type_mask = PositionTarget.IGNORE_VX + PositionTarget.IGNORE_VY + PositionTarget.IGNORE_VZ \
+							+ PositionTarget.IGNORE_AFX + PositionTarget.IGNORE_AFY + PositionTarget.IGNORE_AFZ \
+							+ PositionTarget.IGNORE_YAW + PositionTarget.IGNORE_YAW_RATE
+		# Publish the landing position command
+		rate = rospy.Rate(10)
+		while not rospy.is_shutdown():
+			local_pos_pub.publish(landing_position)
+			rate.sleep()
+			if(self.currPose.pose.position.z < -3.2):
+				print("Landed =========")
+				arm_service(False);
 
 	def run(self):
 		#locations = numpy.matrix([[57, -12, 18.89],[60, -15, 18.89],[63, -12, 18.89],[60, -9, 18.89],[57, -12, 18.89]])
 		self.gotoSampleprobe();
 		self.pickProbe();
 		self.gotoRock();
-		#self.circleRock(0,-3,3,4,16);
-		self.circleRock(self.rock_x,self.rock_y,self.rock_z,3,16,1);
-		
+		###self.circleRock(0,-3,3,4,16);
+		self.circleRock(self.rock_x,self.rock_y,self.rock_z,3.5,24,1);
+		self.gotoRover();
+		self.land_on_rover();
+	
 if __name__ == "__main__":
     highflier = midterm_drone();
     highflier.run();
-
